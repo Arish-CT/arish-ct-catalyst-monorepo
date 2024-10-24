@@ -1,4 +1,4 @@
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { locales, LocaleType } from '~/i18n/routing';
 
@@ -15,11 +15,13 @@ export async function generateMetadata() {
 }
 
 interface Props {
-  params: { locale: LocaleType };
+  params: Promise<{ locale: LocaleType }>;
 }
 
-export default function ChangePassword({ params: { locale } }: Props) {
-  unstable_setRequestLocale(locale);
+export default async function ChangePassword({ params }: Props) {
+  const { locale } = await params;
+
+  setRequestLocale(locale);
 
   return (
     <>

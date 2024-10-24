@@ -34,7 +34,7 @@ interface FormStatus {
 }
 
 const SubmitButton = () => {
-  const t = useTranslations('Reset.Form');
+  const t = useTranslations('Login.ForgotPassword.Form');
 
   const { pending } = useFormStatus();
 
@@ -52,7 +52,7 @@ const SubmitButton = () => {
 };
 
 export const ResetPasswordForm = ({ reCaptchaSettings }: Props) => {
-  const t = useTranslations('Reset.Form');
+  const t = useTranslations('Login.ForgotPassword.Form');
 
   const form = useRef<HTMLFormElement>(null);
   const [formStatus, setFormStatus] = useState<FormStatus | null>(null);
@@ -153,6 +153,9 @@ export const ResetPasswordForm = ({ reCaptchaSettings }: Props) => {
 
         {reCaptchaSettings?.isEnabledOnStorefront && (
           <Field className="relative col-span-full max-w-full space-y-2 pb-7" name="ReCAPTCHA">
+            {/* https://github.com/dozoisch/react-google-recaptcha/issues/277 */}
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-expect-error */}
             <ReCaptcha
               onChange={onReCatpchaChange}
               ref={reCaptchaRef}

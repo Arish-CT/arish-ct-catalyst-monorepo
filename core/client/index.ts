@@ -23,7 +23,7 @@ export const client = createClient({
      * - Requests in middlewares
      * - Requests in `generateStaticParams`
      * - Request in api routes
-     * - Requests in static sites without `unstable_setRequestLocale`
+     * - Requests in static sites without `setRequestLocale`
      *
      * We use the default channelId as a fallback, but it is not ideal in some scenarios.
      *  */
@@ -38,9 +38,9 @@ export const client = createClient({
       return defaultChannelId;
     }
   },
-  beforeRequest: (fetchOptions) => {
+  beforeRequest: async (fetchOptions) => {
     if (fetchOptions?.cache && ['no-store', 'no-cache'].includes(fetchOptions.cache)) {
-      const ipAddress = headers().get('X-Forwarded-For');
+      const ipAddress = (await headers()).get('X-Forwarded-For');
 
       if (ipAddress) {
         return {

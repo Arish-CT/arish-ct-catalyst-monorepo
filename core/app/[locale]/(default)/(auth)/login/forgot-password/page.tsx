@@ -24,7 +24,7 @@ const ResetPageQuery = graphql(
 );
 
 export async function generateMetadata() {
-  const t = await getTranslations('Reset');
+  const t = await getTranslations('Login.ForgotPassword');
 
   return {
     title: t('title'),
@@ -32,17 +32,19 @@ export async function generateMetadata() {
 }
 
 export default async function Reset() {
-  const t = await getTranslations('Reset');
+  const t = await getTranslations('Login.ForgotPassword');
 
   const { data } = await client.fetch({
     document: ResetPageQuery,
     fetchOptions: { next: { revalidate } },
   });
 
+  const recaptchaSettings = await bypassReCaptcha(data.site.settings?.reCaptcha);
+
   return (
     <div className="mx-auto my-6 max-w-4xl">
       <h2 className="mb-8 text-4xl font-black lg:text-5xl">{t('heading')}</h2>
-      <ResetPasswordForm reCaptchaSettings={bypassReCaptcha(data.site.settings?.reCaptcha)} />
+      <ResetPasswordForm reCaptchaSettings={recaptchaSettings} />
     </div>
   );
 }

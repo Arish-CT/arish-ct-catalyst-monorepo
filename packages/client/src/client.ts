@@ -19,7 +19,9 @@ interface Config<FetcherRequestInit extends RequestInit = RequestInit> {
   backendUserAgentExtensions?: string;
   logger?: boolean;
   getChannelId?: (defaultChannelId: string) => Promise<string> | string;
-  beforeRequest?: (fetchOptions?: FetcherRequestInit) => Partial<FetcherRequestInit> | undefined;
+  beforeRequest?: (
+    fetchOptions?: FetcherRequestInit,
+  ) => Promise<Partial<FetcherRequestInit> | undefined> | Partial<FetcherRequestInit> | undefined;
 }
 
 interface BigCommerceResponse<T> {
@@ -32,7 +34,9 @@ class Client<FetcherRequestInit extends RequestInit = RequestInit> {
   private getChannelId: (defaultChannelId: string) => Promise<string> | string;
   private beforeRequest?: (
     fetchOptions?: FetcherRequestInit,
-  ) => Partial<FetcherRequestInit> | undefined;
+  ) => Promise<Partial<FetcherRequestInit> | undefined> | Partial<FetcherRequestInit> | undefined;
+
+  private trustedProxySecret = process.env.BIGCOMMERCE_TRUSTED_PROXY_SECRET;
 
   constructor(private config: Config<FetcherRequestInit>) {
     if (!config.channelId) {
@@ -84,7 +88,7 @@ class Client<FetcherRequestInit extends RequestInit = RequestInit> {
 
     const graphqlUrl = await this.getGraphQLEndpoint(channelId);
     const { headers: additionalFetchHeaders = {}, ...additionalFetchOptions } =
-      this.beforeRequest?.(fetchOptions) ?? {};
+      (await this.beforeRequest?.(fetchOptions)) ?? {};
 
     const response = await fetch(graphqlUrl, {
       method: 'POST',
@@ -93,6 +97,7 @@ class Client<FetcherRequestInit extends RequestInit = RequestInit> {
         Authorization: `Bearer ${this.config.customerImpersonationToken}`,
         'User-Agent': this.backendUserAgent,
         ...(customerId && { 'X-Bc-Customer-Id': customerId }),
+        ...(this.trustedProxySecret && { 'X-BC-Trusted-Proxy-Secret': this.trustedProxySecret }),
         ...additionalFetchHeaders,
         ...headers,
       },
@@ -143,6 +148,7 @@ class Client<FetcherRequestInit extends RequestInit = RequestInit> {
         Accept: 'application/xml',
         'Content-Type': 'application/xml',
         'User-Agent': this.backendUserAgent,
+        ...(this.trustedProxySecret && { 'X-BC-Trusted-Proxy-Secret': this.trustedProxySecret }),
       },
     });
 

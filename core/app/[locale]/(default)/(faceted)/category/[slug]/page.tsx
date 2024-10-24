@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { Breadcrumbs } from '~/components/breadcrumbs';
 import { ProductCard } from '~/components/product-card';
@@ -13,19 +13,21 @@ import { SortBy } from '../../_components/sort-by';
 import { fetchFacetedSearch } from '../../fetch-faceted-search';
 
 import { CategoryViewed } from './_components/category-viewed';
+import { EmptyState } from './_components/empty-state';
 import { SubCategories } from './_components/sub-categories';
 import { getCategoryPageData } from './page-data';
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
     locale: LocaleType;
-  };
-  searchParams: Record<string, string | string[] | undefined>;
+  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const categoryId = Number(params.slug);
+  const { slug } = await params;
+  const categoryId = Number(slug);
 
   const data = await getCategoryPageData({
     categoryId,
@@ -46,8 +48,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Category({ params: { locale, slug }, searchParams }: Props) {
-  unstable_setRequestLocale(locale);
+export default async function Category(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+
+  const { locale, slug } = params;
+
+  setRequestLocale(locale);
 
   const t = await getTranslations('Category');
 
@@ -108,6 +115,8 @@ export default async function Category({ params: { locale, slug }, searchParams 
           <h2 className="sr-only" id="product-heading">
             {t('products')}
           </h2>
+
+          {products.length === 0 && <EmptyState />}
 
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-8">
             {products.map((product, index) => (

@@ -1,5 +1,5 @@
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getSessionCustomerId } from '~/auth';
 import { client } from '~/client';
@@ -35,13 +35,13 @@ const HomePageQuery = graphql(
 );
 
 interface Props {
-  params: {
-    locale: LocaleType;
-  };
+  params: Promise<{ locale: LocaleType }>;
 }
 
-export default async function Home({ params: { locale } }: Props) {
-  unstable_setRequestLocale(locale);
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+
+  setRequestLocale(locale);
 
   const t = await getTranslations('Home');
 

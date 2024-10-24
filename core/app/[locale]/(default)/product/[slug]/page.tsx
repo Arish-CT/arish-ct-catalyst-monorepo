@@ -1,7 +1,7 @@
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import { Breadcrumbs } from '~/components/breadcrumbs';
@@ -17,11 +17,11 @@ import { Warranty } from './_components/warranty';
 import { getProduct } from './page-data';
 
 interface Props {
-  params: { slug: string; locale: LocaleType };
-  searchParams: Record<string, string | string[] | undefined>;
+  params: Promise<{ slug: string; locale: LocaleType }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function getOptionValueIds({ searchParams }: { searchParams: Props['searchParams'] }) {
+function getOptionValueIds({ searchParams }: { searchParams: Awaited<Props['searchParams']> }) {
   const { slug, ...options } = searchParams;
 
   return Object.keys(options)
@@ -34,14 +34,16 @@ function getOptionValueIds({ searchParams }: { searchParams: Props['searchParams
     );
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const productId = Number(params.slug);
   const optionValueIds = getOptionValueIds({ searchParams });
 
   const product = await getProduct({
     entityId: productId,
     optionValueIds,
-    useDefaultOptionSelections: optionValueIds.length === 0 ? true : undefined,
+    useDefaultOptionSelections: true,
   });
 
   if (!product) {
@@ -68,8 +70,13 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   };
 }
 
-export default async function Product({ params: { locale, slug }, searchParams }: Props) {
-  unstable_setRequestLocale(locale);
+export default async function Product(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+
+  const { locale, slug } = params;
+
+  setRequestLocale(locale);
 
   const t = await getTranslations('Product');
 
@@ -80,7 +87,7 @@ export default async function Product({ params: { locale, slug }, searchParams }
   const product = await getProduct({
     entityId: productId,
     optionValueIds,
-    useDefaultOptionSelections: optionValueIds.length === 0 ? true : undefined,
+    useDefaultOptionSelections: true,
   });
 
   if (!product) {
