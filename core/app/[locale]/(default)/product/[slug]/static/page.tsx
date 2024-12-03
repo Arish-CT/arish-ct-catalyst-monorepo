@@ -2,12 +2,12 @@ import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { Metadata } from 'next';
 import { cache } from 'react';
 
-import { getSessionCustomerId } from '~/auth';
+import { getSessionCustomerAccessToken } from '~/auth';
 import { getChannelIdFromLocale } from '~/channels.config';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { revalidate as revalidateTarget } from '~/client/revalidate-target';
-import { locales, LocaleType } from '~/i18n/routing';
+import { locales } from '~/i18n/routing';
 
 import ProductPage from '../page';
 import { getProduct } from '../page-data';
@@ -33,13 +33,15 @@ interface Options {
 }
 
 const getFeaturedProducts = cache(async ({ first = 12 }: Options = {}) => {
-  const customerId = await getSessionCustomerId();
+  const customerAccessToken = await getSessionCustomerAccessToken();
 
   const response = await client.fetch({
     document: FeaturedProductsQuery,
     variables: { first },
-    customerId,
-    fetchOptions: customerId ? { cache: 'no-store' } : { next: { revalidate: revalidateTarget } },
+    customerAccessToken,
+    fetchOptions: customerAccessToken
+      ? { cache: 'no-store' }
+      : { next: { revalidate: revalidateTarget } },
     channelId: getChannelIdFromLocale(), // Using default channel id
   });
 
@@ -58,7 +60,7 @@ export async function generateStaticParams() {
 }
 
 interface Props {
-  params: Promise<{ slug: string; locale: LocaleType }>;
+  params: Promise<{ slug: string; locale: string }>;
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {

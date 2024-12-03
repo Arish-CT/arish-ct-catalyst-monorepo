@@ -124,8 +124,8 @@
         "products": "Prodotti",
         "items": "articoli",
         "Empty": {
-            "message": "No products in this category",
-            "cta": "Return to Home"
+            "message": "Non sono presenti prodotti in questa categoria",
+            "cta": "Ritorna alla Homepage"
         }
     },
     "Search": {
@@ -153,6 +153,7 @@
             "title": "Indirizzi",
             "addNewAddress": "Aggiungi un nuovo indirizzo",
             "editButton": "Modifica",
+            "emptyAddresses": "Nessun indirizzo è stato aggiunto",
             "deleteButton": "Elimina",
             "confirmDeleteAddress": "Cancella indirizzo",
             "deleteModalTitle": "Vuoi davvero eliminare questo indirizzo?",
@@ -203,7 +204,7 @@
             "changePassword": "Cambia password",
             "submit": "AGGIORNA IMPOSTAZIONI",
             "submitting": "Aggiorna impostazioni...",
-            "successMessage": "Gentile {firstName} {lastName}, hai aggiornato con successo i dati del tuo account",
+            "successMessage": "Le impostazioni del tuo account sono state aggiornate",
             "validationMessages": {
                 "email": "Inserisci un indirizzo e-mail valido, ad esempio nome@dominio.com",
                 "empty": "Questo campo non può essere vuoto",
@@ -334,8 +335,7 @@
             }
         },
         "AddToCart": {
-            "success": "{cartItems, plural, =1 {1 articolo} other {# articoli}} aggiunto/i al <cartLink> carrello</cartLink>",
-            "error": "Errore durante l'aggiunta del prodotto al carrello. Riprova."
+            "success": "{cartItems, plural, =1 {1 articolo} other {# articoli}} aggiunto/i al <cartLink> carrello</cartLink>"
         }
     },
     "Product": {
@@ -343,9 +343,14 @@
         "Carousel": {
             "relatedProducts": "Prodotti simili"
         },
+        "Gallery": {
+            "previous": "Previous product image",
+            "next": "Next product image",
+            "thumbnailNavigation": "Thumbnail navigation",
+            "enlarge": "Enlarge product image"
+        },
         "Form": {
             "success": "{cartItems, plural, =1 {1 articolo} other {# articoli}} aggiunto/i al <cartLink> carrello</cartLink>",
-            "error": "Errore durante l'aggiunta del prodotto al carrello. Riprova.",
             "saveToWishlist": "Salva nella lista dei desideri",
             "quantityLabel": "Quantità"
         },
@@ -436,7 +441,34 @@
             "LocaleSwitcher": {
                 "chooseCountryAndLanguage": "Scegli il paese e la lingua",
                 "goToSite": "Vai al sito"
+            },
+            "MiniCart": {
+                "cart": "Carrello",
+                "items": "Articoli nel carrello"
+            },
+            "Navigation": {
+                "toggle": "Toggle navigation",
+                "navigationMenu": "Navigation menu"
+            },
+            "Search": {
+                "openSearchPopup": "Open search popup",
+                "closeSearchPopup": "Close search popup",
+                "searchBar": "Search bar",
+                "photo": "Foto",
+                "products": "Prodotti",
+                "categories": "Categorie",
+                "brands": "Marchi",
+                "noSearchResults": "Siamo spiacenti, nessun risultato per {term}.",
+                "searchPlaceholder": "Cerca...",
+                "clearSearch": "Cancella ricerca",
+                "processing": "Elaborazione in corso..."
             }
+        },
+        "Footer": {
+            "socialMediaLinks": "Link ai social media"
+        },
+        "Breadcrumb": {
+            "breadcrumb": "Breadcrumb"
         },
         "Compare": {
             "compareButton": "Confronta ({products})",
@@ -458,11 +490,34 @@
             "processing": "Elaborazione in corso..."
         },
         "ProductCard": {
+            "Compare": {
+                "compare": "Confronta"
+            },
             "AddToCart": {
                 "viewOptions": "Visualizza le opzioni",
-                "success": "{cartItems, plural, =1 {1 articolo} other {# articoli}} aggiunto/i al <cartLink> carrello</cartLink>",
-                "error": "Errore durante l'aggiunta del prodotto al carrello. Riprova."
+                "success": "{cartItems, plural, =1 {1 articolo} other {# articoli}} aggiunto/i al <cartLink> carrello</cartLink>"
             }
+        },
+        "Slideshow": {
+            "slideshow": "Interactive slide show",
+            "slide": "Slide",
+            "previousSlide": "Previous slide",
+            "nextSlide": "Next slide",
+            "slideNo": "{n} of {total}",
+            "pause": "Pause slideshow",
+            "play": "Play slideshow"
+        },
+        "Pagination": {
+            "pagination": "impaginazione",
+            "previous": "Indietro",
+            "next": "Avanti"
+        },
+        "Carousel": {
+            "carousel": "Carosello",
+            "previousProducts": "Previous products",
+            "nextProducts": "Next products",
+            "slides": "Slides",
+            "goto": "Go to slide {n}"
         },
         "FormFields": {
             "Validation": {
@@ -481,6 +536,10 @@
                 "password": "Inserisci una password",
                 "phone": "Inserisci un numero di telefono",
                 "postalCode": "Inserisci un codice postale"
+            },
+            "Counter": {
+                "increase": "Aumenta conteggio",
+                "decrease": "Diminuisci conteggio"
             }
         }
     }

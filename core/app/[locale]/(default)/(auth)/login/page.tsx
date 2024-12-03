@@ -1,14 +1,16 @@
-import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { use } from 'react';
 
 import { Link } from '~/components/link';
 import { Button } from '~/components/ui/button';
-import { locales, LocaleType } from '~/i18n/routing';
+import { locales } from '~/i18n/routing';
 
 import { LoginForm } from './_components/login-form';
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+
+  setRequestLocale(locale);
+
   const t = await getTranslations('Login');
 
   return {
@@ -17,25 +19,25 @@ export async function generateMetadata() {
 }
 
 interface Props {
-  params: Promise<{ locale: LocaleType }>;
+  params: Promise<{ locale: string }>;
 }
 
-export default function Login({ params }: Props) {
-  const { locale } = use(params);
+export default async function Login({ params }: Props) {
+  const { locale } = await params;
 
   setRequestLocale(locale);
 
-  const t = useTranslations('Login');
+  const t = await getTranslations('Login');
 
   return (
     <div className="mx-auto my-6 max-w-4xl">
-      <h2 className="text-h2 mb-8 text-4xl font-black lg:text-5xl">{t('heading')}</h2>
+      <h2 className="text-h3 mb-8 text-3xl font-black lg:text-4xl">{t('heading')}</h2>
       <div className="mb-12 grid grid-cols-1 lg:grid-cols-2 lg:gap-x-8">
         <LoginForm />
         <div className="flex flex-col gap-4 bg-gray-100 p-8">
-          <h3 className="text-h5 mb-3">{t('CreateAccount.heading')}</h3>
+          <h3 className="mb-3 text-xl font-bold lg:text-2xl">{t('CreateAccount.heading')}</h3>
           <p className="text-base font-semibold">{t('CreateAccount.accountBenefits')}</p>
-          <ul className="list-disc ps-4">
+          <ul className="mb-4 list-disc ps-4">
             <li>{t('CreateAccount.fastCheckout')}</li>
             <li>{t('CreateAccount.multipleAddresses')}</li>
             <li>{t('CreateAccount.ordersHistory')}</li>
